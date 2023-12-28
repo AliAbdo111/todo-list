@@ -8,6 +8,8 @@ import { UserModule } from './user/user.module';
 import { TodoModule } from './todo/todo.module';
 import { CategoryModule } from './category/category.module';
 import { UserService } from './user/user.service';
+import { JwtService } from '@nestjs/jwt';
+import { ScrapingService } from './profile-controller/scraping.service';
 
 
 @Module({
@@ -20,8 +22,8 @@ import { UserService } from './user/user.service';
       database: 'todo_list',
       autoLoadEntities:true,
       synchronize: true,
-  }), UserModule, TodoModule, CategoryModule],
+  }), UserModule, TodoModule, CategoryModule,],
   controllers: [AppController, UserController ],
-  providers: [UserService,AppService],
+  providers: [UserService,AppService,JwtService,ScrapingService],
 })
 export class AppModule {}

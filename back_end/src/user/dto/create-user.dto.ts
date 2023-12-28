@@ -24,4 +24,7 @@ export class CreateUserDto {
     @IsNotEmpty()
     @MinLength(8)
     password: string
+    
+    @IsNotEmpty()
+    linkedIn_url:string
 }

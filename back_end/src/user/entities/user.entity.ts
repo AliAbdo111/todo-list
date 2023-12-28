@@ -12,7 +12,10 @@ export class User {
 
     @Column({nullable:true })
     img_url?:string
-    
+
+    @Column({nullable:true})
+    linkedIn_url:string
+
     @Column()
     @IsEmail()
     @IsNotEmpty()

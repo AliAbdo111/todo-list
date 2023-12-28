@@ -5,7 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService,) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -14,19 +14,9 @@ export class UserController {
  
   @Post('/signIn')
   async signIn(@Body() input: UpdateUserDto) {
-     const result=await  this.userService.signIn(input);
-     console.log(result)
-     if(result){
-      return{
-        statuscode:200,
-        message:'user login successfully'
-      }
-     }
-     return{
-      statuscode:401,
-      message:'valid ceriadential'
-    }
+     return await  this.userService.signIn(input);
   }
+  
   @Get()
   findAll() {
     return this.userService.findAll();
