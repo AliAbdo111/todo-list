@@ -15,6 +15,7 @@ export class TodoController {
 
   @Get()
   findAll() {
+    console.log("find all")
     return this.todoService.findAll();
   }
 

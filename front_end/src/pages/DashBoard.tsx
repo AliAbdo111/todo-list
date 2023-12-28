@@ -10,6 +10,7 @@ import EditListModal from '.././components/EditListModal';
 import MainContent from '.././components/MainContent';
 import EditTaskModal from '.././components/EditTaskModal';
 import DeleteTaskModal from '.././components/DeleteTaskModal';
+import Profile from './profile/Profil';
 
 const DashBoard: FC = () => {
   const notificationMsg = useSelector((state: RootState) => state.notification.message);
@@ -20,12 +21,13 @@ const DashBoard: FC = () => {
 
   return (
     <div className="App">
-      <Header title="Task List App" subtitle="Create some lists and add some tasks to each list" />
+      {/* <Header title="Task List App" subtitle="Create some lists and add some tasks to each list" /> */}
 
       <div className="container px-8">
         <div className="columns">
           <Sidebar />
           <MainContent />
+          <Profile />
         </div>
       </div>
 

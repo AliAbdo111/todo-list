@@ -4,7 +4,7 @@ import { BadRequestException, ValidationPipe } from '@nestjs/common';
 
 declare const module :any;
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule,{cors:true});
   app.useGlobalPipes(
     new ValidationPipe({
       exceptionFactory: (errors) => {
@@ -17,7 +17,6 @@ async function bootstrap() {
       stopAtFirstError: true,
     }),
     )
-
     await app.listen(9000);
   if (module.hot) {
     module.hot.accept();

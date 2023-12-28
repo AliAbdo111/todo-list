@@ -6,9 +6,9 @@ export class ScrapingService {
   private driver: WebDriver;
 
   constructor() {
-    this.driver = new Builder().forBrowser('chrome').build();
-  }
-
+    // this.driver = new Builder().forBrowser('chrome').build();
+  }  
+ 
   async scrapeProfileData(profileUrl: string): Promise<any> {
     try {
       await this.driver.get(profileUrl);

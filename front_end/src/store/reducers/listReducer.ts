@@ -1,4 +1,6 @@
+import axios from "axios";
 import { ListsAction, ListState, Lists, ADD_LIST, GET_LISTS, GET_LIST_BY_ID, SET_LISTID_TO_DELETE, SET_LIST_TO_EDIT, DELETE_LIST, UPDATE_LIST, SET_SELECTED_LIST, ADD_TASK, SET_TASK_TO_DELETE, UNSET_TASK_TO_DELETE, DELETE_TASK, SET_TASK_TO_EDIT, UNSET_TASK_TO_EDIT, UPDATE_TASK } from "../types";
+import { Api } from "../serviceApi";
 
 const initialState: ListState = {
   lists: {},
@@ -12,6 +14,17 @@ const initialState: ListState = {
 
 // Helper functions
 const getListsFromLS = (): Lists => {
+  try {
+    Api.get('category/'
+  ).then((res)=>
+  {if(res.status===200){
+    return res.data
+  }}
+  )
+
+  } catch (error) {
+    console.log(error)
+  }
   if(localStorage.getItem('task_list')) {
     return JSON.parse(localStorage.getItem('task_list') || '{}');
   }
@@ -19,7 +32,15 @@ const getListsFromLS = (): Lists => {
   return {};
 }
 
-const saveListsToLS = (lists: Lists) => {
+const saveListsToLS = (lists: string) => {
+  try{
+    console.log(lists);
+    
+    Api.post('category/',{CategoryName:lists}).then((res=>{
+      console.log(res)}))
+  }catch(e){
+    console.log(e)
+  }
   localStorage.setItem('task_list', JSON.stringify(lists));
 }
 
@@ -30,7 +51,8 @@ export default (state = initialState, action: ListsAction): ListState => {
     case ADD_LIST:
       const clonedListsFromLS = {...listsFromLS};
       clonedListsFromLS[action.payload.id] = action.payload;
-      saveListsToLS(clonedListsFromLS);
+      console.log(`action is${action.payload.name}`)
+      saveListsToLS(action.payload.name);
       return {
         ...state,
         lists: clonedListsFromLS
@@ -66,7 +88,7 @@ export default (state = initialState, action: ListsAction): ListState => {
       const clonedListsFromLS2 = {...listsFromLS};
       const listId = clonedListsFromLS2[action.payload].id;
       delete clonedListsFromLS2[action.payload];
-      saveListsToLS(clonedListsFromLS2);
+      // saveListsToLS(clonedListsFromLS2);
       return {
         ...state,
         lists: clonedListsFromLS2,
@@ -78,7 +100,7 @@ export default (state = initialState, action: ListsAction): ListState => {
     case UPDATE_LIST:
       const clonedListsFromLS3 = {...listsFromLS};
       clonedListsFromLS3[action.payload.id].name = action.payload.name;
-      saveListsToLS(clonedListsFromLS3);
+      // saveListsToLS(clonedListsFromLS3);
       return {
         ...state,
         lists: clonedListsFromLS3,
@@ -95,7 +117,7 @@ export default (state = initialState, action: ListsAction): ListState => {
     case ADD_TASK:
       const clonedListsFromLS4 = {...listsFromLS};
       clonedListsFromLS4[action.payload.list.id].tasks.push(action.payload.task);
-      saveListsToLS(clonedListsFromLS4);
+      // saveListsToLS(clonedListsFromLS4);
       return {
         ...state,
         lists: clonedListsFromLS4,
@@ -123,7 +145,7 @@ export default (state = initialState, action: ListsAction): ListState => {
       const task = clonedTasks.find(task => task.id === state.taskToDelete!.task.id);
       clonedTasks.splice(clonedTasks.indexOf(task!), 1);
       clonedListsFromLS5[state.taskToDelete!.list.id].tasks = clonedTasks;
-      saveListsToLS(clonedListsFromLS5);
+      // saveListsToLS(clonedListsFromLS5);
       return {
         ...state,
         lists: clonedListsFromLS5,
@@ -157,7 +179,7 @@ export default (state = initialState, action: ListsAction): ListState => {
       const updatedTasks = clonedTasks2.map(task => task.id === clonedTask.id ? clonedTask : task);
       clonedList.tasks = updatedTasks;
       clonedListsFromLS6[clonedList.id] = clonedList;
-      saveListsToLS(clonedListsFromLS6);
+      // saveListsToLS(clonedListsFromLS6);
 
       return {
         ...state,

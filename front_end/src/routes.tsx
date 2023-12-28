@@ -22,10 +22,10 @@ const DashBoard = Loadable(lazy(() => import('./pages/DashBoard')));
 
 const routes: RouteObject[] = [
   {
-    path: '/',
+    path: '/auth',
     children: [
       {
-        path: '/',
+        path: 'login',
         element: <Login />,
       },
       {

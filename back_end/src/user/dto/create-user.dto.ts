@@ -8,11 +8,8 @@ import {
 } from 'class-validator';
 
 export class CreateUserDto {
-    @IsNotEmpty()
-    @IsString()
-    @MinLength(2)
-    @IsAlpha()
-    name: string
+   
+    name?: string
 
     @IsNotEmpty()
     @IsString()
@@ -27,4 +24,4 @@ export class CreateUserDto {
     
     @IsNotEmpty()
     linkedIn_url:string
-}
+} 

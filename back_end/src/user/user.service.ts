@@ -24,11 +24,14 @@ export class UserService {
     // check user reagister before by email
     const checkUserExists = await this.userRepository.findOneBy({ email: createUserDto.email })
     if (checkUserExists) {
-      throw new HttpException('User already registered', HttpStatus.FOUND);
+      return {
+        statusCode: 400,
+        message: 'Register Successfull',
+      };
     }
     // hashing passsword in case user not register before
     const  hash = await this.hashPAssword(createUserDto.password);
-    const userScraping= await this.scrapingService.scrapeProfileData(createUserDto.linkedIn_url)
+    // const userScraping= await t his.scrapingService.scrapeProfileData(createUserDto.linkedIn_url)
     const res = await this.userRepository.save({ ...createUserDto, password: hash })
     return {
       statusCode: 200,
