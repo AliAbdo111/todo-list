@@ -3,7 +3,6 @@ A simple TodoList with React, Redux and TypeScript
 
 [![DEMO](https://img.shields.io/badge/live%20demo-0073cf?style=for-the-badge&logoColor=white)](https://joselyndrf.github.io/react-redux-typescript-todolist)
 
-<img src="https://user-images.githubusercontent.com/15716360/211161078-d8ad34c5-58af-44cf-aafa-d1f28ef8f275.gif" width="600">
 
 ## Features
 * Load items from API
