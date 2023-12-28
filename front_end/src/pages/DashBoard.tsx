@@ -22,11 +22,10 @@ const DashBoard: FC = () => {
     <div className="App">
       <Header title="Task List App" subtitle="Create some lists and add some tasks to each list" />
 
-      <div className="container px-5">
+      <div className="container px-8">
         <div className="columns">
           <Sidebar />
           <MainContent />
-          <Sidebar />
         </div>
       </div>
 
