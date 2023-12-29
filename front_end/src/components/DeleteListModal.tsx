@@ -37,13 +37,13 @@ const DeleteListModal: FC<DeleteListModalProps> = ({ listId }) => {
         <div className="modal-card-body">
           <h2 className="is-size-5 has-text-centered">All tasks related to this list will be deleted</h2>
           <div className="content">
-            {list?.tasks.length === 0 ?
+            { 0 ?
               <p className="has-text-centered pt-4 mb-0">No tasks in this list!</p>
               :
               <ul>
-                {list?.tasks.map(task => (
-                  <li key={task.id}>{task.name}</li>
-                ))}
+                {/* {[1,2,3,4].map(task => (
+                  // <li key={task.id}>{task.name}</li>
+                ))} */}
               </ul>
             }
           </div>

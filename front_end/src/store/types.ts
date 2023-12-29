@@ -18,21 +18,27 @@ export const UNSET_TASK_TO_EDIT = 'UNSET_TASK_TO_EDIT';
 export const SET_NOTIFICATION = 'SET_NOTIFICATION';
 
 export interface Task {
-  name: string;
-  id: string;
-  completed: boolean;
+  id:number,
+  title:string,
+  description:string,
+  category:number,
+  user:number
+  completed?:boolean
 }
 
 export interface List {
   name: string;
-  id: string;
-  tasks: Task[];
+  id?: string;
+  // tasks: Task[];
 }
 
 export interface Lists {
-  [id: string]: List
+  list: List
 }
-
+export interface Category {
+ id :number,
+ CategoryName:string
+}
 // Actions
 interface AddListAction {
   type: typeof ADD_LIST;
@@ -139,7 +145,7 @@ export type ListsAction = AddListAction | GetListsAction | GetListByIdAction | S
 export type NotificationAction = SetNotificationAction;
 
 export interface ListState {
-  lists: Lists;
+  lists: any;
   listIdToDelete: string;
   listToEdit: List | null;
   listById: List | null;

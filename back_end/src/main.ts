@@ -7,9 +7,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule,{cors:true});
   app.useGlobalPipes(
     new ValidationPipe({
-      exceptionFactory: (errors) => {
+      exceptionFactory: (errors) => {   
         const result = errors.map((error) => ({
-          property: error.property,
+           property: error.property,
           message: error.constraints[Object.keys(error.constraints)[0]],
         }));
         return new BadRequestException(result);

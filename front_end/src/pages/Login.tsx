@@ -21,6 +21,7 @@ const LoginPage: FC= () => {
 			console.log(res.status)
 			if(res.status===201){
 				localStorage.setItem('accessToken',res.data.accessToken)
+				localStorage.setItem('data',res.data.id)
 				navigate('/dashBoard')
 				toast.success("valide login",{ position: toast.POSITION.TOP_CENTER})
 			}else if(res.status===400){

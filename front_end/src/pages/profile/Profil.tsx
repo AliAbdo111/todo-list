@@ -7,7 +7,7 @@ const Profile: FC = () => {
 
     const navigate=useNavigate()
     const hundelLogOut=()=>{
-        localStorage.removeItem('accessToken')
+        localStorage.clear()
         navigate('/auth/login')
     }
     return (

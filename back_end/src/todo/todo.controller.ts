@@ -15,13 +15,12 @@ export class TodoController {
 
   @Get()
   findAll() {
-    console.log("find all")
     return this.todoService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.todoService.findOne(+id);
+  @Get('/:user_id/:category_id')
+  findOne(@Param() params: any) {
+    return this.todoService.findOne(+ params.user_id,+ params.category_id);
   }
 
   @Patch(':id')

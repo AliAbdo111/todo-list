@@ -1,29 +1,39 @@
-import React, { FC, FormEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { FC, FormEvent, useEffect } from 'react';
+import { useDispatch, } from 'react-redux';
 
-import { List } from '../store/types';
-import { setSelectedList } from '../store/actions';
-import { RootState } from '../store/store';
+import { Category,  } from '../store/types';
+import { useAppSelector } from '../utils/hooks';
+import { fetchCategory } from '../store/reducers/categoryreduser';
+import { fetchTaskes } from '../store/reducers/TaskREducer';
 
-const SelectList: FC = () => {
+const SelectList: FC = ({}) => {
+
   const dispatch = useDispatch();
-  const lists = useSelector((state: RootState) => state.list.lists);
 
+  const list =useAppSelector(state=>state.CategoryKey.categoryList);
+  useEffect(()=>{
+    dispatch(fetchCategory())
+
+  },[dispatch])
   const selectChangeHandler = (e: FormEvent<HTMLSelectElement>) => {
-    dispatch(setSelectedList(e.currentTarget.value));
+    const user_id=localStorage.getItem('data')
+    const data={
+      user_id:user_id,
+    }
+    dispatch(fetchTaskes(data));
   }
 
   return(
     <section>
-      <h2 className="is-size-4 has-text-centered mb-4">Choose a list</h2>
+      <h2 className="is-size-4 has-text-centered mb-4">Choose a Category</h2>
       <div className="field mb-5">
         <div className="control has-icons-left">
           <div className="select fullwidth">
             <select className="fullwidth" onChange={selectChangeHandler}>
               <option value="">Select List</option>
-              {Object.keys(lists).length > 0 &&
-                Object.values(lists).map((list: List) => (
-                  <option key={list.id} value={list.id}>{list.name}</option>
+              {list.length > 0 &&
+                list.map((list: Category) => (
+                  <option key={list?.id} value={list?.id}>{list?.CategoryName}</option>
                 ))
               }
             </select>

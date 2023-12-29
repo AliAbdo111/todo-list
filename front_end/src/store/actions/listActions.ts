@@ -48,7 +48,7 @@ export const deleteList = (id: string): ListsAction => {
   }
 }
 
-export const updateList = (id: string, name: string): ListsAction => {
+export const updateList = (id: any, name: string): ListsAction => {
   return {
     type: UPDATE_LIST,
     payload: {

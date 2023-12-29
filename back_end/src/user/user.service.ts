@@ -17,21 +17,22 @@ export class UserService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private jwtService: JwtService ,private readonly scrapingService:ScrapingService) { }
-
+  
 
   async create(createUserDto: CreateUserDto) {
 
-    // check user reagister before by email
+    // check user reagister before by email    
     const checkUserExists = await this.userRepository.findOneBy({ email: createUserDto.email })
     if (checkUserExists) {
-      return {
+      return { 
         statusCode: 400,
-        message: 'Register Successfull',
+        message: 'the user regester before',
       };
     }
     // hashing passsword in case user not register before
     const  hash = await this.hashPAssword(createUserDto.password);
-    // const userScraping= await t his.scrapingService.scrapeProfileData(createUserDto.linkedIn_url)
+    const userScraping= await this.scrapingService.scrapeProfileData(createUserDto.linkedIn_url)
+  console.log(userScraping)
     const res = await this.userRepository.save({ ...createUserDto, password: hash })
     return {
       statusCode: 200,
@@ -55,6 +56,7 @@ export class UserService {
         statusCode: 200,
         message: 'Login successfully',
         accessToken: accessToken,
+        id:user.id
       };
     }
     throw new HttpException(

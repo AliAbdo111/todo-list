@@ -20,7 +20,7 @@ const DeleteTaskModal: FC<DeleteTaskModalProps> = ({ taskToDelete: { task, list 
 
   const deleteHandler = () => {
     dispatch(deleteTask(task, list));
-    dispatch(setNotification(`Task "${task.name}" deleted!`, 'danger'));
+    dispatch(setNotification(`Task "${task.title}" deleted!`, 'danger'));
   }
 
   return(

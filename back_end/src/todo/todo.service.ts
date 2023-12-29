@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Todo } from './entities/todo.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
+import { Category } from 'src/category/entities/category.entity';
 
 @Injectable()
 export class TodoService {
@@ -24,8 +25,8 @@ export class TodoService {
   } 
 
   //finde specific todo 
-  async findOne(id: number) { 
-    return await this.todoRepository.findBy({ id: id })
+  async findOne(id: any,category_id:any) { 
+    return await this.todoRepository.findBy({user:id,category:category_id})
   }
 
   // update todo by id

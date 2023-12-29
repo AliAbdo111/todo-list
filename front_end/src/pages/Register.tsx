@@ -3,8 +3,6 @@ import '../App.css'
 import { redirect, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Api } from '../store/serviceApi';
-import { getResponseError } from '../utils/errorUtils';
-import FormFieldError from '../components/FormFieldError';
 
 const Register: FC= () => {
 
@@ -14,12 +12,20 @@ const Register: FC= () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [linkedIn_url, setLinkedIn_url] = useState('');
+  const [errorLinkedIn, setErrorLinked] = useState(false);
+
+
 
 const submitHandler = (e: FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   if(email===''||password===''){
 	  toast.warn('email  password and Linked In Url  required ',{ position: toast.POSITION.TOP_CENTER,})
 	  return ;
+  }
+  const isValide =isValidLinkedInProfileUrl(linkedIn_url)
+  if(!isValide){
+	  setErrorLinked(true)
+	  return
   }
   try {
 	  Api.post('/user', {email:email,password:password,linkedIn_url:linkedIn_url}).then((res)=>{
@@ -49,10 +55,18 @@ const inputChangeHandlerEmail = (e: FormEvent<HTMLInputElement>) => {
 const inputChangeHandlerPassword = (e: FormEvent<HTMLInputElement>) => {
   setPassword(e.currentTarget.value);
 }
-const inputChangeHandlerLinked = (e: FormEvent<HTMLInputElement>) => {
-	setLinkedIn_url(e.currentTarget.value);
+function isValidLinkedInProfileUrl(url: string): boolean {
+	// Regular expression for a LinkedIn profile URL
+	const linkedInUrlPattern = /^https:\/\/www\.linkedin\.com\/in\/[a-zA-Z0-9-]+\/?$/;
+  
+	// Test if the provided URL matches the pattern
+	return linkedInUrlPattern.test(url);
   }
 
+const inputChangeHandlerLinked = (e: FormEvent<HTMLInputElement>) => {
+	setLinkedIn_url(e.currentTarget.value);
+
+  }
 
   return(
     <div className="containerLogin">
@@ -66,8 +80,7 @@ const inputChangeHandlerLinked = (e: FormEvent<HTMLInputElement>) => {
 					onChange={inputChangeHandlerEmail}
 					className="login__input"
 					 placeholder="User name / Email" />
-					 {/* hundel Error message  */}
-					 {/* <FormFieldError message={error?.email}/> */}
+
 				</div>
 				<div className="login__field">
 					<i className="login__icon fas fa-lock"></i>
@@ -79,10 +92,11 @@ const inputChangeHandlerLinked = (e: FormEvent<HTMLInputElement>) => {
 				</div>
                 <div className="login__field">
 					<input
-					 type="password"
+					 type="text"
 					  className="login__input" 
 					  onChange={inputChangeHandlerLinked}
 					  placeholder="LinkedIn Profile Url" />
+					     {errorLinkedIn&& <span id="error-message" className="error-message">Enter vlide Link please</span>}
 				</div>
 				<button className="button login__submit">
 					<span className="button__text">Sgin Up</span>

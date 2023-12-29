@@ -1,78 +1,58 @@
-import React, { FC, FormEvent, useState } from 'react';
+// EditTaskModal.tsx
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-
-import { Task, List } from '../store/types';
-import { updateTask, unsetTaskToEdit, setNotification } from '../store/actions';
+import { Task } from '../store/types';
+import { modifiedTask } from '../store/reducers/TaskREducer';
 
 interface EditTaskModalProps {
-  taskToEdit: {
-    task: Task;
-    list: List;
-  }
+  taskId: any;
+  currentTask: any;
+  onClose: () => void;
 }
 
-const EditTaskModal: FC<EditTaskModalProps> = ({ taskToEdit: { task, list }}) => {
+const EditTaskModal: React.FC<EditTaskModalProps> = ({ taskId, currentTask, onClose }) => {
   const dispatch = useDispatch();
-  const [taskName, setTaskName] = useState(task.name);
-  const [taskState, setTaskState] = useState(task.completed);
+  const [updatedTitle, setUpdatedTitle] = useState(currentTask.title);
+  const [updatedDescription, setUpdatedDescription] = useState(currentTask.description);
 
-  const closeModalHandler = () => {
-    dispatch(unsetTaskToEdit());
-  }
+  const handleSave = async () => {
+    const updatedTask: any = {
+      ...currentTask,
+      title: updatedTitle,
+      description: updatedDescription,
+    };
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    await dispatch(modifiedTask(updatedTask));
+    onClose();
+  };
 
-    if(taskName.trim() === '') {
-      return alert('Task name is required!');
-    }
+  return (
+    <div className='overlay'>
+      <h3>Edit Task</h3>
+      <form className='card-container'>
+        <label>Title:</label>
+        <input type="text" className='login__input'
+          value={updatedTitle} onChange={(e) => setUpdatedTitle(e.target.value)} />
 
-    if(taskName === task.name && taskState === task.completed) {
-      return alert('Task name and state are the same as before!');
-    }
-
-    dispatch(updateTask(task.id, taskName, taskState, list));
-    dispatch(setNotification(`Task "${task.name}" updated!`));
-  }
-
-  const nameChangeHandler = (e: FormEvent<HTMLInputElement>) => {
-    setTaskName(e.currentTarget.value);
-  }
-
-  const stateChangeHandler = (e: FormEvent<HTMLInputElement>) => {
-    setTaskState(e.currentTarget.checked);
-  }
-
-  return(
-    <div className="modal is-active">
-      <div className="modal-background" onClick={closeModalHandler}></div>
-      <form className="modal-card" onSubmit={submitHandler}>
-        <header className="modal-card-head">
-          <p className="modal-card-title">Edit Task</p>
-          <button type="button" className="delete" onClick={closeModalHandler}></button>
-        </header>
-        <div className="modal-card-body">
-          <div className="field">
-            <label className="label">Task Name</label>
-            <div className="control">
-              <input type="text" className="input" placeholder="Task Name" value={taskName} onChange={nameChangeHandler} />
-            </div>
-          </div>
-          <div className="field">
-            <label className="label">Complete task</label>
-            <label className="checkbox">
-              <input type="checkbox" checked={taskState} onChange={stateChangeHandler} />
-              {' '} Complete
-            </label>
-          </div>
+        <label>Description:</label>
+        <input
+          type="text"
+          className='login__input'
+          value={updatedDescription}
+          onChange={(e) => setUpdatedDescription(e.target.value)}
+        />
+        <div className='butn'>
+          <button type="button" className="button" onClick={handleSave}>
+            Save
+          </button>
+          <button type="button" className='button' onClick={onClose}>
+            Cancel
+          </button>
         </div>
-        <footer className="modal-card-foot">
-          <button type="submit" className="button is-success">Save changes</button>
-          <button type="button" className="button" onClick={closeModalHandler}>Cancel</button>
-        </footer>
+
       </form>
     </div>
   );
-}
+};
 
 export default EditTaskModal;

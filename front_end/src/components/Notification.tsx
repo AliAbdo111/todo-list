@@ -12,7 +12,8 @@ let timeout: ReturnType<typeof setTimeout>;
 
 const Notification: FC<NotificationProps> = ({ msg }) => {
   const dispatch = useDispatch();
-  const type = useSelector((state: RootState) => state.notification.type);
+  // const type = useSelector((state: RootState) => state.notification.type);
+  const type =' useSelector((state: RootState) => state.notification.type)';
 
   useEffect(() => {
     if(msg !== '') {
@@ -31,7 +32,7 @@ const Notification: FC<NotificationProps> = ({ msg }) => {
   }
 
   return(
-    <div className={msg ? `${type === 'danger' ? 'notification is-danger' : 'notification is-primary'}` : 'notification is-hidden' }>
+    <div className={msg ? `$ === 'danger' ? 'notification is-danger' : 'notification is-primary'}` : 'notification is-hidden' }>
       <button className="delete" onClick={closeNotification}></button>
       <p>{msg}</p>
     </div>

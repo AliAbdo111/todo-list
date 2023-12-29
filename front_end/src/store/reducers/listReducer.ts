@@ -13,46 +13,41 @@ const initialState: ListState = {
 }
 
 // Helper functions
-const getListsFromLS = (): Lists => {
+const getListsFromLS = async():Promise< any> => {
   try {
-    Api.get('category/'
-  ).then((res)=>
-  {if(res.status===200){
-    return res.data
-  }}
-  )
+  const response= await Api.get('category/')
+  console.log(response)
+  return response.data
 
   } catch (error) {
     console.log(error)
   }
-  if(localStorage.getItem('task_list')) {
-    return JSON.parse(localStorage.getItem('task_list') || '{}');
-  }
+
 
   return {};
 }
 
-const saveListsToLS = (lists: string) => {
-  try{
-    console.log(lists);
-    
-    Api.post('category/',{CategoryName:lists}).then((res=>{
-      console.log(res)}))
-  }catch(e){
+const saveListsToLS = (data: any) => {
+  try {
+    // console.log(data)
+    Api.post('category/', { CategoryName: data.name }).then((res => {
+      // console.log(res)
+    }))
+  } catch (e) {
     console.log(e)
   }
-  localStorage.setItem('task_list', JSON.stringify(lists));
+  // localStorage.setItem('task_list', JSON.stringify(lists));
 }
 
 export default (state = initialState, action: ListsAction): ListState => {
   const listsFromLS = getListsFromLS();
+  console.log(listsFromLS)
 
-  switch(action.type) {
+  switch (action.type) {
     case ADD_LIST:
-      const clonedListsFromLS = {...listsFromLS};
-      clonedListsFromLS[action.payload.id] = action.payload;
-      console.log(`action is${action.payload.name}`)
-      saveListsToLS(action.payload.name);
+      const clonedListsFromLS = { ...listsFromLS };
+      // clonedListsFromLS[action.payload.id] = action.payload;
+      saveListsToLS(action.payload);
       return {
         ...state,
         lists: clonedListsFromLS
@@ -65,10 +60,10 @@ export default (state = initialState, action: ListsAction): ListState => {
       }
 
     case GET_LIST_BY_ID:
-      const list = listsFromLS[action.payload];
+      // const list = listsFromLS[action.payload];
       return {
         ...state,
-        listById: list
+        // listById: list
       }
 
     case SET_LISTID_TO_DELETE:
@@ -78,50 +73,50 @@ export default (state = initialState, action: ListsAction): ListState => {
       }
 
     case SET_LIST_TO_EDIT:
-      const listToEdit = listsFromLS[action.payload];
-      return {
-        ...state,
-        listToEdit
-      }
+      // const listToEdit = listsFromLS[action.payload];
+      // return {
+      //   ...state,
+      //   listToEdit
+      // }
 
     case DELETE_LIST:
-      const clonedListsFromLS2 = {...listsFromLS};
-      const listId = clonedListsFromLS2[action.payload].id;
-      delete clonedListsFromLS2[action.payload];
-      // saveListsToLS(clonedListsFromLS2);
-      return {
-        ...state,
-        lists: clonedListsFromLS2,
-        listIdToDelete: '',
-        listById: null,
-        selectedList: state.selectedList && listId === state.selectedList.id ? null : state.selectedList
-      }
+      // const clonedListsFromLS2 = { ...listsFromLS };
+      // const listId = clonedListsFromLS2[action.payload].id;
+      // delete clonedListsFromLS2[action.payload];
+      // // saveListsToLS(clonedListsFromLS2);
+      // return {
+      //   ...state,
+      //   lists: clonedListsFromLS2,
+      //   listIdToDelete: '',
+      //   listById: null,
+      //   selectedList: state.selectedList && listId === state.selectedList.id ? null : state.selectedList
+      // }
 
     case UPDATE_LIST:
-      const clonedListsFromLS3 = {...listsFromLS};
-      clonedListsFromLS3[action.payload.id].name = action.payload.name;
-      // saveListsToLS(clonedListsFromLS3);
-      return {
-        ...state,
-        lists: clonedListsFromLS3,
-        listToEdit: null
-      }
+      // const clonedListsFromLS3 = { ...listsFromLS };
+      // clonedListsFromLS3[action.payload.id].name = action.payload.name;
+      // // saveListsToLS(clonedListsFromLS3);
+      // return {
+      //   ...state,
+      //   lists: clonedListsFromLS3,
+      //   listToEdit: null
+      // }
 
     case SET_SELECTED_LIST:
-      const selectedList = getListsFromLS()[action.payload];
-      return {
-        ...state,
-        selectedList: selectedList
-      }
+      // const selectedList = getListsFromLS()[action.payload];
+      // return {
+      //   ...state,
+      //   selectedList: selectedList
+      // }
 
     case ADD_TASK:
-      const clonedListsFromLS4 = {...listsFromLS};
-      clonedListsFromLS4[action.payload.list.id].tasks.push(action.payload.task);
+      const clonedListsFromLS4 = { ...listsFromLS };
+      // clonedListsFromLS4[action.payload.list.id].tasks.push(action.payload.task);
       // saveListsToLS(clonedListsFromLS4);
       return {
         ...state,
         lists: clonedListsFromLS4,
-        selectedList: clonedListsFromLS4[action.payload.list.id]
+        // selectedList: clonedListsFromLS4[action.payload.list.id]
       }
 
     case SET_TASK_TO_DELETE:
@@ -140,16 +135,16 @@ export default (state = initialState, action: ListsAction): ListState => {
       }
 
     case DELETE_TASK:
-      const clonedListsFromLS5 = {...listsFromLS};
-      const clonedTasks = [...clonedListsFromLS5[state.taskToDelete!.list.id].tasks];
-      const task = clonedTasks.find(task => task.id === state.taskToDelete!.task.id);
-      clonedTasks.splice(clonedTasks.indexOf(task!), 1);
-      clonedListsFromLS5[state.taskToDelete!.list.id].tasks = clonedTasks;
+      const clonedListsFromLS5 = { ...listsFromLS };
+      // const clonedTasks = [...clonedListsFromLS5[state.taskToDelete!.list.id].tasks];
+      // const task = clonedTasks.find(task => task.id === state.taskToDelete!.task.id);
+      // clonedTasks.splice(clonedTasks.indexOf(task!), 1);
+      // clonedListsFromLS5[state.taskToDelete!.list.id].tasks = clonedTasks;
       // saveListsToLS(clonedListsFromLS5);
       return {
         ...state,
         lists: clonedListsFromLS5,
-        selectedList: clonedListsFromLS5[state.taskToDelete!.list.id],
+        // selectedList: clonedListsFromLS5[state.taskToDelete!.list.id],
         taskToDelete: null
       }
 
@@ -168,25 +163,25 @@ export default (state = initialState, action: ListsAction): ListState => {
         taskToEdit: null
       }
 
-    case UPDATE_TASK:
-      const clonedListsFromLS6 = {...listsFromLS};
-      const clonedList = {...clonedListsFromLS6[action.payload.list.id]};
-      const clonedTasks2 = [...clonedList.tasks];
-      const task2 = clonedTasks2.find(task => task.id === action.payload.taskId);
-      const clonedTask = {...task2!};
-      clonedTask.name = action.payload.taskName;
-      clonedTask.completed = action.payload.taskState;
-      const updatedTasks = clonedTasks2.map(task => task.id === clonedTask.id ? clonedTask : task);
-      clonedList.tasks = updatedTasks;
-      clonedListsFromLS6[clonedList.id] = clonedList;
-      // saveListsToLS(clonedListsFromLS6);
+    // case UPDATE_TASK:
+    //   const clonedListsFromLS6 = { ...listsFromLS };
+    //   const clonedList = { ...clonedListsFromLS6[action.payload.list.id] };
+    //   // const clonedTasks2 = [...clonedList.tasks];
+    //   // const task2 = clonedTasks2.find(task => task.id === action.payload.taskId);
+    //   const clonedTask = { ...task2! };
+    //   clonedTask.name = action.payload.taskName;
+    //   clonedTask.completed = action.payload.taskState;
+    //   const updatedTasks = clonedTasks2.map(task => task.id === clonedTask.id ? clonedTask : task);
+    //   // clonedList.tasks = updatedTasks;
+    //   clonedListsFromLS6[clonedList.id] = clonedList;
+    //   // saveListsToLS(clonedListsFromLS6);
 
-      return {
-        ...state,
-        lists: clonedListsFromLS6,
-        selectedList: clonedList,
-        taskToEdit: null
-      }
+    //   return {
+    //     ...state,
+    //     lists: clonedListsFromLS6,
+    //     selectedList: clonedList,
+    //     taskToEdit: null
+    //   }
 
     default:
       return state;

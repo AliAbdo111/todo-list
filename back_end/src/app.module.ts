@@ -19,7 +19,7 @@ import { ScrapingService } from './profile-controller/scraping.service';
       port: 5432,
       username: 'postgres', 
       password: 'root', 
-      database: 'todo_list',
+      database: 'todo_list_v2',
       autoLoadEntities:true,
       synchronize: true,
   }), UserModule, TodoModule, CategoryModule,],

@@ -2,19 +2,20 @@ import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '../store/store';
-import { getLists, setListToEdit, setListIdToDelete } from '../store/actions';
-import { List } from '../store/types';
+import {  setListToEdit, setListIdToDelete } from '../store/actions';
+import { Category, List } from '../store/types';
+import { fetchCategory } from '../store/reducers/categoryreduser';
 
 const Lists: FC = () => {
   const dispatch = useDispatch();
-  const lists = useSelector((state: RootState) => state.list.lists);
+  const categories = useSelector((state: RootState) => state.CategoryKey.categoryList);
 
   useEffect(() => {
-    dispatch(getLists());
+    dispatch(fetchCategory());
   }, [dispatch]);
 
-  const setListToEditHandler = (id: string) => {
-    dispatch(setListToEdit(id));
+  const setListToEditHandler = (id: any) => {
+    // dispatch(setListToEdit(id));
   } 
 
   const setListIdToDeleteHandler = (id: string) => {
@@ -23,17 +24,17 @@ const Lists: FC = () => {
 
   return(
     <div className="panel is-primary">
-      <p className="panel-heading">Your lists</p>
+      <p className="panel-heading">Your categories</p>
       <div>
-        { Object.keys(lists).length === 0
+        { categories.length === 0
           ?
-            <p className="py-4 has-text-centered">No Lists</p>
+            <p className="py-4 has-text-centered">No categories</p>
           :
             <div>
-              {Object.values(lists).map((list: List) => {
-                return <div className="panel-block py-3" key={list.id}>
-                  <p onClick={() => setListToEditHandler(list.id)}>{list.name}</p>
-                  <span className="panel-icon has-text-danger" onClick={() => setListIdToDeleteHandler(list.id)}>
+              {categories.map((list: Category) => {
+                return <div className="panel-block py-3" key={list?.id}>
+                  <p className='red' onClick={() => setListToEditHandler(list?.id)}>{list?.CategoryName}</p>
+                  <span className="panel-icon has-text-danger" onClick={() => console.log('')}>
                     <i className="fas fa-times-circle"></i>
                   </span>
                 </div>
