@@ -2,8 +2,7 @@
 import React from 'react';
 import { Suspense, lazy } from 'react';
 import type { RouteObject } from 'react-router';
-// import LoadingScreen from './components/LoadingScreen';
-
+import Navigate, { useNavigate } from 'react-router-dom'
 const Loadable = (Component: any) => (props: JSX.IntrinsicAttributes) =>
   (
     <Suspense fallback={ ""}>
@@ -20,7 +19,17 @@ const Register = Loadable(
 //  * DashBoard PAGE
 const DashBoard = Loadable(lazy(() => import('./pages/DashBoard')));
 
+const NavigateToLogin = () => {
+  const navigate = useNavigate();
+  navigate('/auth/login');
+  return null; // or any loading indicator if needed
+};
+
 const routes: RouteObject[] = [
+  {
+    path: '/',
+    element: <Login />, // Redirect to '/auth/login' by default
+  },
   {
     path: '/auth',
     children: [
@@ -48,5 +57,6 @@ const routes: RouteObject[] = [
     ],
   },
 ];
+
 
 export default routes;

@@ -21,12 +21,20 @@ export class TodoService {
 
   // find all todo's for user creaated before
   async findAll() {
-    return await this.todoRepository.find();
+    return await this.todoRepository.find({relations:{
+      category:true
+    }});
   } 
 
   //finde specific todo 
-  async findOne(id: any,category_id:any) { 
-    return await this.todoRepository.findBy({user:id,category:category_id})
+  async findOne(id: any) { 
+    return await this.todoRepository.find({
+      where:{
+        user:{id: id}
+      },relations:{
+        category:true
+      }
+    })
   }
 
   // update todo by id

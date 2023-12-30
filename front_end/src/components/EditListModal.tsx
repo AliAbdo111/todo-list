@@ -1,70 +1,55 @@
-import React, { FC, FormEvent, useState } from 'react';
+// EditTaskModal.tsx
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Category } from '../store/types';
+import { fetchTaskes, modifiedTask } from '../store/reducers/taskReducer';
+import { fetchCategory } from '../store/reducers/categoryReducer';
 
-import { List } from '../store/types';
-import { setListToEdit, updateList, setNotification } from '../store/actions';
-
-interface EditListModalProps {
-  list: List;
+interface EditTaskModalProps {
+  listId: any;
+  currentList: any;
+  onClose: () => void;
 }
 
-const EditListModal: FC<EditListModalProps> = ({ list }) => {
+const EditListModal: React.FC<EditTaskModalProps> = ({listId, currentList, onClose }) => {
+
+      // Hookes used in component
   const dispatch = useDispatch();
-  const [listName, setListName] = useState(list.name);
+  const [name, setName] = useState(currentList);
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSave = async () => {
+    const updatedList: Category = {
+      CategoryName:currentList,
+      id:listId
+    };
+    await dispatch(modifiedTask(updatedList));
+    dispatch(fetchCategory())
+    onClose();
+  };
 
-    if(listName.trim() === '') {
-      return alert('List name is required!');
-    }
-
-    if(listName.trim() === list.name) {
-      return alert('List name is the same as before!');
-    }
-
-    dispatch(updateList(list.id, listName.trim()));
-    dispatch(setNotification(`List "${list.name}" updated!`));
-  }
-
-  const changeHandler = (e: FormEvent<HTMLInputElement>) => {
-    setListName(e.currentTarget.value);
-  }
-
-  const hideModalHandler = () => {
-    dispatch(setListToEdit(''));
-  }
-
-  return(
-    <div className="modal is-active">
-      <div className="modal-background" onClick={hideModalHandler}></div>
-      <form className="modal-card" onSubmit={submitHandler}>
-        <header className="modal-card-head">
-          <p className="modal-card-title">Edit List</p>
-          <button type="button" className="delete" onClick={hideModalHandler}></button>
-        </header>
-        <div className="modal-card-body">
-          <div className="field">
-            <label className="label">List Name</label>
-            <div className="control">
-              <input 
-                type="text"
-                className="input"
-                name="listName"
-                placeholder="List Name"
-                value={listName}
-                onChange={changeHandler}  
-              />
-            </div>
-          </div>
+  return (
+    <div className='overlay'>
+      <h3>Edit Task</h3>
+      <form className='card-container'>
+        <label>Title:</label>
+        <input
+          type="text"
+          className='login__input red'
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <div className='butn'>
+          <button type="button" className="button" onClick={handleSave}>
+            Save
+          </button>
+          <button type="button" className='button' onClick={onClose}>
+            Cancel
+          </button>
         </div>
-        <footer className="modal-card-foot">
-          <button type="submit" className="button is-success">Save changes</button>
-          <button type="button" className="button" onClick={hideModalHandler}>Cancel</button>
-        </footer>
+
       </form>
     </div>
   );
-}
+};
 
 export default EditListModal;

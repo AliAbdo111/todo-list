@@ -18,9 +18,9 @@ export class TodoController {
     return this.todoService.findAll();
   }
 
-  @Get('/:user_id/:category_id')
+  @Get('/:user_id')
   findOne(@Param() params: any) {
-    return this.todoService.findOne(+ params.user_id,+ params.category_id);
+    return this.todoService.findOne(+ params.user_id,);
   }
 
   @Patch(':id')

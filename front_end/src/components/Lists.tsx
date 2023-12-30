@@ -1,45 +1,49 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RootState } from '../store/store';
-import {  setListToEdit, setListIdToDelete } from '../store/actions';
-import { Category, List } from '../store/types';
-import { fetchCategory } from '../store/reducers/categoryreduser';
+import { Category } from '../store/types';
+import { fetchCategory } from '../store/reducers/categoryReducer';
+import EditListModal from './EditListModal';
 
 const Lists: FC = () => {
+    // Hookes used in component
+  const [isEditModalOpen, setisEditModalOpen] = useState(false)
   const dispatch = useDispatch();
   const categories = useSelector((state: RootState) => state.CategoryKey.categoryList);
+  useEffect(() => {dispatch(fetchCategory());}, [dispatch]);
 
-  useEffect(() => {
-    dispatch(fetchCategory());
-  }, [dispatch]);
-
+  // hundeler used in component
   const setListToEditHandler = (id: any) => {
-    // dispatch(setListToEdit(id));
-  } 
-
-  const setListIdToDeleteHandler = (id: string) => {
-    dispatch(setListIdToDelete(id));
+    setisEditModalOpen(true)
   }
-
-  return(
+  const closeEditModal = () => {
+    setisEditModalOpen(false);
+  };
+// ui
+  return (
     <div className="panel is-primary">
       <p className="panel-heading">Your categories</p>
       <div>
-        { categories.length === 0
+        {categories.length === 0
           ?
-            <p className="py-4 has-text-centered">No categories</p>
+          <p className="py-4 has-text-centered">No categories</p>
           :
-            <div>
-              {categories.map((list: Category) => {
-                return <div className="panel-block py-3" key={list?.id}>
-                  <p className='red' onClick={() => setListToEditHandler(list?.id)}>{list?.CategoryName}</p>
-                  <span className="panel-icon has-text-danger" onClick={() => console.log('')}>
-                    <i className="fas fa-times-circle"></i>
-                  </span>
-                </div>
-              })}
-            </div>
+          <div>
+            {categories.map((list: Category) => {
+              return <div className="panel-block py-3" key={list?.id}>
+                  {isEditModalOpen && (
+                  <EditListModal currentList={list.CategoryName} onClose={closeEditModal} listId={list.id} />
+                )}
+                <p className='red' >{list?.CategoryName}</p>
+                <span className="icon" onClick={() => setListToEditHandler(list?.id)}>
+                  <i className="fas fa-edit red"></i>
+                </span>
+              
+              </div>
+              
+            })}
+          </div>
         }
       </div>
     </div>

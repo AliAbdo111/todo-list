@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "author": "",
-  "private": true, 
+  "private": true,
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
@@ -26,6 +26,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/typeorm": "^10.0.1",
+    "@types/selenium-webdriver": "^4.1.21",
     "bcrypt": "^5.1.1",
     "chromedriver": "^120.0.1",
     "class-transformer": "^0.5.1",

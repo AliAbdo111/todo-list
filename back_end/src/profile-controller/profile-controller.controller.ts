@@ -7,7 +7,7 @@ export class ProfileController {
 
   @Get('/:profileUrl')
   async getProfileData(@Param('profileUrl') profileUrl: string): Promise<any> {
-    const profileData = await this.scrapingService.scrapeProfileData(profileUrl);
+    const profileData = await this.scrapingService.scrapeLinkedInProfile(profileUrl);
     return profileData;
   }
 }

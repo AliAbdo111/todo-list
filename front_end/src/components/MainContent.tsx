@@ -1,20 +1,21 @@
 import React, { FC, Fragment, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import SelectList from './SelectList';
+import { fetchTaskes } from '../store/reducers/taskReducer';
+import { useAppSelector} from '../utils/hooks';
 import { RootState } from '../store/store';
+import SelectList from './SelectList';
 import AddNewTask from './AddNewTask';
 import Tasks from './Tasks';
-import {useAppDispatch ,useAppSelector} from '../utils/hooks';
-import { fetchTaskes } from '../store/reducers/TaskREducer';
-import { useDispatch } from 'react-redux';
+
+
 const MainContent: FC = () => {
+
   const despatch=useDispatch()
-  const selectedList =useAppSelector(state=>state.taskKey.taskList);
- const user_id=localStorage.getItem('data')
-  useEffect(()=>{
-    despatch(fetchTaskes(user_id))
-  },[despatch])
+  const selectedList =useAppSelector(state=>state.CategoryKey.id);
+  const user_id =useSelector((state:RootState)=>state.aouthKey.id);
+  useEffect(()=>{ despatch(fetchTaskes(user_id))},[despatch]);
 
   return(
     <div className="column is-6">
@@ -25,7 +26,7 @@ const MainContent: FC = () => {
             <Fragment>
               <AddNewTask list={selectedList} />
               <hr/>
-              <Tasks tasks={selectedList} />
+              <Tasks  />
             </Fragment>
         }
       </div>

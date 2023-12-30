@@ -1,10 +1,13 @@
 import React, { FC, useState, FormEvent } from 'react';
 import { useDispatch } from 'react-redux';
-import { addCategory, fetchCategory } from '../store/reducers/categoryreduser';
+import { addCategory, fetchCategory } from '../store/reducers/categoryReducer';
 
 const CreateNewList: FC = () => {
+
+      // Hookes used in component
   const dispatch = useDispatch();
   const [categoryName, setCategoryName] = useState('');
+
 
   const inputChangeHandler = (e: FormEvent<HTMLInputElement>) => {
     setCategoryName(e.currentTarget.value);
@@ -16,7 +19,6 @@ const CreateNewList: FC = () => {
     if(categoryName.trim() === '') {
       return alert('List name is required!');
     }
-
     const newList: any = {
       CategoryName: categoryName,
       // tasks: []

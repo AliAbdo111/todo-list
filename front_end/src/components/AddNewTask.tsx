@@ -1,19 +1,23 @@
 import React, { FC, useState, FormEvent } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { List,  } from '../store/types';
-import TaskREducer, { addTask ,fetchTaskes,Task} from '../store/reducers/TaskREducer';
+import TaskREducer, { addTask ,fetchTaskes,Task} from '../store/reducers/taskReducer';
 import { toast } from 'react-toastify';
-// import { addTask, setNotification } from '../store/actions';
+import { RootState } from '../store/store';
 
 interface AddNewTaskProps {
   list: any;
 }
 
 const AddNewTask: FC<AddNewTaskProps> = ({ list }) => {
+
   const dispatch = useDispatch();
   const [taskName, setTaskName] = useState('');
   const [description, setTaskDescription] = useState('');
+  const user_id =useSelector((state:RootState)=>state.aouthKey.id);
+  let categoryId= useSelector((state:RootState)=>state.CategoryKey.id);
+
 
   const changeHandlerName = (e: FormEvent<HTMLInputElement>) => {
     setTaskName(e.currentTarget.value);
@@ -21,26 +25,28 @@ const AddNewTask: FC<AddNewTaskProps> = ({ list }) => {
   const changeHandlerDes = (e: FormEvent<HTMLInputElement>) => {
     setTaskDescription(e.currentTarget.value);
   }
-  const submitHandler =async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
 
+  const submitHandler =async (e: FormEvent<HTMLFormElement>) => {
+    try{e.preventDefault();
     if(taskName.trim() === '') {
       toast.warn('Task name is required!');
     }
-const user_id=Number( localStorage.getItem('data') )
-    const newTask: Task = {
+
+    let newTask = {
       title: taskName,
       description: description, 
-      category:3,
-      user:2
+      category:categoryId,
+      user:user_id
     }
 
    await dispatch(addTask(newTask));
-   dispatch(fetchTaskes(Number(localStorage.getItem('data'))));
+   dispatch(fetchTaskes(user_id));
 
     setTaskName('');
     setTaskDescription('')
-
+}catch(error){
+toast.error('Error Occuerd server')
+}
   }
 
   return(
@@ -53,7 +59,7 @@ const user_id=Number( localStorage.getItem('data') )
             <input type="text" className="input" placeholder="Add Task" value={taskName} onChange={changeHandlerName} />
           </div>
           <div className="control mt-4 ">
-            <input type="text" className="input" placeholder="Add Task Description" value={description} onChange={changeHandlerDes} />
+            <input type="date" className="input" placeholder="Add Task Description" value={description} onChange={changeHandlerDes} />
           </div>
           <div className="control mt-4">
             <input type="submit" value="Add New Task" className="button is-primary" />

@@ -1,8 +1,9 @@
 // EditTaskModal.tsx
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Task } from '../store/types';
-import { modifiedTask } from '../store/reducers/TaskREducer';
+import { fetchTaskes, modifiedTask } from '../store/reducers/taskReducer';
+import { RootState } from '../store/store';
 
 interface EditTaskModalProps {
   taskId: any;
@@ -11,18 +12,22 @@ interface EditTaskModalProps {
 }
 
 const EditTaskModal: React.FC<EditTaskModalProps> = ({ taskId, currentTask, onClose }) => {
+  
+    // Hookes used in component
   const dispatch = useDispatch();
   const [updatedTitle, setUpdatedTitle] = useState(currentTask.title);
   const [updatedDescription, setUpdatedDescription] = useState(currentTask.description);
+  const user_id =useSelector((state:RootState)=>state.aouthKey.id)
 
   const handleSave = async () => {
-    const updatedTask: any = {
-      ...currentTask,
-      title: updatedTitle,
-      description: updatedDescription,
-    };
-
+        const updatedTask: Task = {
+          ...currentTask,
+          id:taskId,
+          title: updatedTitle,
+          description: updatedDescription,
+        };
     await dispatch(modifiedTask(updatedTask));
+    await dispatch(fetchTaskes(user_id));
     onClose();
   };
 
@@ -31,13 +36,16 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ taskId, currentTask, onCl
       <h3>Edit Task</h3>
       <form className='card-container'>
         <label>Title:</label>
-        <input type="text" className='login__input'
-          value={updatedTitle} onChange={(e) => setUpdatedTitle(e.target.value)} />
-
-        <label>Description:</label>
-        <input
+        <input 
           type="text"
-          className='login__input'
+          className='login__input red'
+          value={updatedTitle} 
+          onChange={(e) => setUpdatedTitle(e.target.value)} />
+          
+        <label>Date:</label>
+        <input
+          type="date"
+          className='login__input red'
           value={updatedDescription}
           onChange={(e) => setUpdatedDescription(e.target.value)}
         />

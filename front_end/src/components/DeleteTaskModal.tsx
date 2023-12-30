@@ -12,12 +12,14 @@ interface DeleteTaskModalProps {
 }
 
 const DeleteTaskModal: FC<DeleteTaskModalProps> = ({ taskToDelete: { task, list }}) => {
+
+      // Hookes used in component
   const dispatch = useDispatch();
 
   const closeModalHandler = () => {
     dispatch(unsetTaskToDelete());
   }
-
+  
   const deleteHandler = () => {
     dispatch(deleteTask(task, list));
     dispatch(setNotification(`Task "${task.title}" deleted!`, 'danger'));

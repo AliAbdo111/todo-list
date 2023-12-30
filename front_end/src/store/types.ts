@@ -21,9 +21,22 @@ export interface Task {
   id:number,
   title:string,
   description:string,
-  category:number,
+  category:Category,
   user:number
-  completed?:boolean
+
+}
+export  type ErrorCatchple={
+  statusCode:number,
+  message:number
+}
+
+export interface User{
+  id:number,
+  name?:string,
+  email:string,
+  password:string,
+  img_url?:string,
+  linkedIn_url:string
 }
 
 export interface List {
@@ -64,7 +77,7 @@ interface SetListToEditAction {
   payload: string;
 }
 
-interface DeleteListAction {
+ interface DeleteListAction {
   type: typeof DELETE_LIST;
   payload: string;
 }

@@ -1,11 +1,12 @@
 import React, { FC } from 'react';
 
-interface HeaderProps {
-  title: string;
-  subtitle?: string;
-}
+  interface HeaderProps {
+    title: string;
+    subtitle?: string;
+  }
 
 const Header: FC<HeaderProps> = ({ title, subtitle }) => {
+
   return (
     <header className=" has-text-centered is-dark is-bold mb-5">
       <div className="hero-body">

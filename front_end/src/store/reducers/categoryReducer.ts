@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { Category } from "../types";
 
@@ -6,6 +6,7 @@ const categoryState = {
   updateState: false,
   loading: false,
   categoryList: [],
+  id:1,
   error: "",
   response: "",
 };
@@ -14,8 +15,8 @@ export const fetchCategory= createAsyncThunk(
   "category/fetchCategory",
   async () => {
     const response = await axios.get("http://localhost:9000/category");
-    console.log(response.data)
     return response.data;
+    
   }
 );
 
@@ -23,32 +24,26 @@ export const addCategory = createAsyncThunk(
   "category/addCategory",
   async (data:Category) => {
     const response = await axios.post("http://localhost:9000/category", data);
-    console.log(response.data)
     return response.data.response;
   }
 );
 
-export const removeTask = createAsyncThunk(
-  "task/removeTask",
-  async (data:Category) => {
-    const response = await axios.delete(
-      `http://localhost:8000/api/items/${data}`
-    );
-    return response.data.response;
-  }
-);
-
-export const modifiedEmployee = createAsyncThunk(
-  "employee/modifiedEmployee",
+export const setCategorySelected=createAsyncThunk(
+  "categorySelected",
+  (categoryId:any)=>{
+    categoryState.id=categoryId;
+}
+)
+export const modifiedCategory = createAsyncThunk(
+  "category/modifiedCategory",
   async (data:any) => {
-    const response = await axios.put(
-      `http://localhost:8000/api/items/${data.id}`,
+    const response = await axios.patch(
+      `http://localhost:9000/category/${data.id}`,
       {
-        name: data.name,
-        position: data.position,
+        CateogryName: data.CategoryName,
       }
     );
-    return response.data.response;
+    return response.data;
   }
 );
 
@@ -86,27 +81,26 @@ const taskSlice = createSlice({
         state.categoryList = action.payload;
       })
       .addCase(fetchCategory.rejected, (state:any, action:any) => {
+        state.error = action.error.message; 
+      });
+    
+    builder
+      .addCase(modifiedCategory.fulfilled,(state:any,action:any)=>{
+        const updateCategory=action.payload
+        const index= state.categoryList.findIndex(
+          (item:Category)=>item.id===updateCategory.id
+          )
+          state.categoryList[index]=updateCategory
+      })
+      .addCase(modifiedCategory.rejected, (state:any, action:any) => {
         state.error = action.error.message;
       });
+    builder
+      .addCase(setCategorySelected.fulfilled,
+            ( state:any, action:PayloadAction)=>{
+              state.id=action.payload;
+            })
 
-    builder.addCase(removeTask.fulfilled, (state :any, action :any) => {
-      state.categoryList = state.categoryList.filter(
-        (item:Category) => item.id != action.payload
-      );
-      state.response = "delete";
-    });
-
-    builder.addCase(modifiedEmployee.fulfilled, (state:any, action:any) => {
-      const updateItem = action.payload;
-      console.log(updateItem);
-      const index = state.categoryList.findIndex(
-        (item:Category) => item.id === updateItem._id
-      );
-      if (index!==-1) {
-        state.categoryList[index] = updateItem;
-      }
-      state.response = "update";
-    });
   },
 });
 

@@ -1,26 +1,29 @@
 import React, { FC, FormEvent, useEffect } from 'react';
-import { useDispatch, } from 'react-redux';
+import { useDispatch, useSelector, } from 'react-redux';
 
 import { Category,  } from '../store/types';
 import { useAppSelector } from '../utils/hooks';
-import { fetchCategory } from '../store/reducers/categoryreduser';
-import { fetchTaskes } from '../store/reducers/TaskREducer';
+import { fetchCategory, setCategorySelected } from '../store/reducers/categoryReducer';
+import { fetchTaskes, filterByCategory } from '../store/reducers/taskReducer';
+import { RootState } from '../store/store';
 
-const SelectList: FC = ({}) => {
-
+const SelectList: FC = () => {
+  
+// Hookes used in component
   const dispatch = useDispatch();
-
-  const list =useAppSelector(state=>state.CategoryKey.categoryList);
+  const user_id =  useSelector((state:RootState)=>state.aouthKey.id)
+  const list    =   useAppSelector(state=>state.CategoryKey.categoryList)
+  const id    =   useAppSelector(state=>state.CategoryKey.id)
+  
   useEffect(()=>{
     dispatch(fetchCategory())
-
   },[dispatch])
-  const selectChangeHandler = (e: FormEvent<HTMLSelectElement>) => {
-    const user_id=localStorage.getItem('data')
-    const data={
-      user_id:user_id,
-    }
-    dispatch(fetchTaskes(data));
+
+
+  const selectChangeHandler = async(e: any) => {
+    console.log(e.target.value)
+    dispatch(setCategorySelected(e.target.value))
+    await dispatch(filterByCategory(e.target.value));
   }
 
   return(
@@ -29,11 +32,11 @@ const SelectList: FC = ({}) => {
       <div className="field mb-5">
         <div className="control has-icons-left">
           <div className="select fullwidth">
-            <select className="fullwidth" onChange={selectChangeHandler}>
+            <select className="fullwidth" defaultValue={id} onChange={selectChangeHandler} >
               <option value="">Select List</option>
               {list.length > 0 &&
                 list.map((list: Category) => (
-                  <option key={list?.id} value={list?.id}>{list?.CategoryName}</option>
+                  <option key={list?.id}  value={list?.id}>{list?.CategoryName}</option>
                 ))
               }
             </select>
